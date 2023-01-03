@@ -5,6 +5,7 @@ const router = new Router()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const {check, validationResult} = require('express-validator')
+const authMiddleware = require('../middleware/auth.middleware.js')
 
 //Перед отправкой запроса делаем валидацию
 router.post('/registration', 
@@ -65,6 +66,32 @@ router.post('/login', async (req, res) => {
         console.log(e);
         res.send({message: 'Server error'})
     }
+})
+
+//Проверка на авторизацию при перезагрузке страницы
+router.get('/auth', authMiddleware,
+    async (req, res) => {
+        try {
+            //Получаем пользователя из id из токена
+            const user = await User.findOne({where: {id: req.user.id}})
+
+            //Перезаписываем токен
+            const token = jwt.sign({id: user.id}, process.env.SECRET_KEY, {expiresIn: '1h'})
+            //После генерации токена возвращаем данные о пользователе
+            return res.json({
+                token,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    diskSpace: user.diskSpace,
+                    usedSpace: user.usedSpace,
+                    avatar: user.avatar
+                }
+            })
+        } catch (e) {
+            console.log(e);
+            res.send({message: 'Server error'})
+        }
 })
 
 module.exports = router
