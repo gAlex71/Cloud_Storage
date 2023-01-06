@@ -1,11 +1,11 @@
 const Router = require('express')
-// require('dotenv').config()
-const {User} = require('../models/models')
+const {User, File} = require('../models/models')
 const router = new Router()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const {check, validationResult} = require('express-validator')
 const authMiddleware = require('../middleware/auth.middleware.js')
+const fileService = require('../services/fileService')
 
 //Перед отправкой запроса делаем валидацию
 router.post('/registration', 
@@ -30,7 +30,7 @@ router.post('/registration',
         const hashPassword = await bcrypt.hash(password, 10)
 
         const user = await User.create({email: email, password: hashPassword})
-
+        await fileService.createDir(await File.create({userId: user.id, name: ''}))
         return res.json(user)
     } catch (e) {
         console.log(e);

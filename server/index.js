@@ -3,6 +3,7 @@ const sequelize = require('./db')
 const express = require('express')
 const cors = require('cors')
 const authRouter = require('./routes/auth_routes')
+const fileRouter = require('./routes/file_routes')
 
 const PORT = process.env.PORT || 5000
 
@@ -12,6 +13,7 @@ app.use(cors())
 //Для парсинга json, по дефолту отсутствует
 app.use(express.json())
 app.use('/api/auth', authRouter)
+app.use('/api/files', fileRouter)
 
 const start = async() => {
     try{

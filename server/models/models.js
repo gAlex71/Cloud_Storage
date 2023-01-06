@@ -12,9 +12,10 @@ const User = sequelize.define('user', {
 const File = sequelize.define('file', {
     name: { type: DataTypes.STRING },
     type: { type: DataTypes.STRING },
-    access_link: { type: DataTypes.STRING, unique: true },
-    size: { type: DataTypes.INTEGER },
-    parent: { type: DataTypes.INTEGER }
+    accessLink: { type: DataTypes.STRING, unique: true },
+    size: { type: DataTypes.INTEGER, defaultValue: 0 },
+    path: { type: DataTypes.STRING, defaultValue: '' },
+    date: { type: DataTypes.DATE, defaultValue: Date.now() },
 }, {timestamps: false, tableName: 'file'})
 
 User.hasMany(File)
