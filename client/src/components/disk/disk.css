@@ -1,0 +1,11 @@
+.disk {
+    margin-top: 20px;
+}
+
+.disk_btns {
+    display: flex;
+}
+
+.disk_create {
+    margin-left: 10px;
+}
