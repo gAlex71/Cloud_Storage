@@ -2,22 +2,19 @@ const sequelize = require('../db')
 const {DataTypes} = require('sequelize')
 
 const User = sequelize.define('user', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     email: { type: DataTypes.STRING, unique: true },
-    password: { type: DataTypes.STRING },
-    diskSpace: { type: DataTypes.INTEGER },
-    usedSpace: { type: DataTypes.INTEGER },
-    avatar: { type: DataTypes.STRING }
+    password: { type: DataTypes.STRING, allowNull: false },
+    diskSpace: { type: DataTypes.INTEGER, defaultValue: 1024**3 },
+    usedSpace: { type: DataTypes.INTEGER, defaultValue: 0 },
+    avatar: { type: DataTypes.STRING, defaultValue: '' }
 }, {timestamps: false, tableName: 'user'})
 
 const File = sequelize.define('file', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING },
-    type: { type: DataTypes.STRING, allowNull: false },
+    type: { type: DataTypes.STRING },
     access_link: { type: DataTypes.STRING, unique: true },
     size: { type: DataTypes.INTEGER },
-    user_id: { type: DataTypes.INTEGER },
-    parent_id: { type: DataTypes.INTEGER }
+    parent: { type: DataTypes.INTEGER }
 }, {timestamps: false, tableName: 'file'})
 
 User.hasMany(File)

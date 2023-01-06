@@ -29,7 +29,7 @@ router.post('/registration',
 
         const hashPassword = await bcrypt.hash(password, 10)
 
-        const user = User.create({email: email, password: hashPassword})
+        const user = await User.create({email: email, password: hashPassword})
 
         return res.json(user)
     } catch (e) {
