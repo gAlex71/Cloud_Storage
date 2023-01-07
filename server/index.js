@@ -2,6 +2,7 @@ require('dotenv').config()
 const sequelize = require('./db')
 const express = require('express')
 const cors = require('cors')
+const fileUpload = require('express-fileupload')
 const authRouter = require('./routes/auth_routes')
 const fileRouter = require('./routes/file_routes')
 
@@ -12,6 +13,7 @@ const app = express()
 app.use(cors())
 //Для парсинга json, по дефолту отсутствует
 app.use(express.json())
+app.use(fileUpload({}))
 app.use('/api/auth', authRouter)
 app.use('/api/files', fileRouter)
 

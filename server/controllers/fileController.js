@@ -1,5 +1,8 @@
 const fileService = require('../services/fileService')
+const path = require('path')
+const fs = require('fs')
 const {User, File} = require('../models/models')
+const { isErrored } = require('stream')
 
 //Здесь мы будем работать с запросами
 class FileController{
@@ -31,6 +34,50 @@ class FileController{
             return res.json(files)
         } catch (e) {
             return res.status(500).json({message: "Cannot get files"})
+        }
+    }
+
+    async uploadFiles(req, res){
+        try{
+            const file = req.files.file
+            const parent = await File.findOne({where: {userId: req.user.id}})
+            const user = await User.findOne({where: {id: req.user.id}})
+
+            //Если на диске нет свободного места
+            if(user.usedSpace + file.size > user.diskSpace){
+                return res.status(400).json({message: "There not space on the disk"})
+            }
+
+            user.usedSpace = user.usedSpace + file.size
+
+            let pathNew
+            if(parent){
+                pathNew =  path.join(__dirname, `/${user.id}/${parent.path}/${file.name}`)
+            }else{
+                pathNew =  path.join(__dirname, `/${user.id}/${file.name}`)
+            }
+
+            //Если такой файл уже существует отправляем сообщение об этом
+            if(fs.existsSync(pathNew)){
+                return res.status(400).json({message: "File already exist"})
+            }
+            //Переместим файл по раннее созданному пути
+            file.mv(pathNew)
+
+            //Разделяем название по точкам, и забираем последний элемент
+            const type = file.name.split('.').pop()
+            const dbFile = await File.create({
+                name: file.name,
+                type,
+                size: file.size,
+                path: parent?.path,
+                // parent: parent?.id
+                userId: user.id
+            })
+
+            res.json(dbFile)
+        } catch (e) {
+            return res.status(500).json({message: "Error upload"})
         }
     }
 }
