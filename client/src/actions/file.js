@@ -30,3 +30,30 @@ export function createFile(name){
         }
     }
 }
+
+export function uploadFile(file, dirId){
+    return async dispatch => {
+        try {
+            const formData = new FormData()
+            formData.append('file', file)
+            if(dirId){
+                formData.append('parent', dirId)
+            }
+            const response = axios.post(`http://localhost:5000/api/files/upload`, formData, {
+                headers: {Autorization: `Bearer ${localStorage.getItem('token')}`},
+                //Функция прогресса загрузки
+                onUploadProgress: progressEvent => {
+                    const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
+                    console.log('total', totalLength)
+                    if (totalLength) {
+                        let progress = Math.round((progressEvent.loaded * 100) / totalLength)
+                        console.log(progress)
+                    }
+                }
+            })
+            dispatch(addFile(response.data))
+        } catch (e) {
+            console.log(e.response.data.message);
+        }
+    }
+}
