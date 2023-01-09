@@ -2,7 +2,6 @@ const fileService = require('../services/fileService')
 const path = require('path')
 const fs = require('fs')
 const {User, File} = require('../models/models')
-const { isErrored } = require('stream')
 
 //Здесь мы будем работать с запросами
 class FileController{
@@ -78,6 +77,22 @@ class FileController{
             res.json(dbFile)
         } catch (e) {
             return res.status(500).json({message: "Error upload"})
+        }
+    }
+
+    async downloadFile(req, res){
+        try {
+            //Получаем файл с базы данных по его id и id пользователя
+            const file = await File.findOne({where: {id: req.query.id, userId: req.user.id}})
+            //Находим путь к этому файлу
+            const pathFile = path.join(__dirname, `\\${req.user.id}\\${file.path}\\${file.name}`)
+            //Если файл по данному пути существует, то отправляем его обратно на клиент
+            if(fs.existsSync(pathFile)){
+                return res.download(pathFile, file.name)
+            }
+            return res.status(400).json({message: "Download error"})
+        } catch (e) {
+            return res.status(500).json({message: "Download error"})
         }
     }
 }

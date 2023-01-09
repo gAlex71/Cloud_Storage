@@ -57,3 +57,23 @@ export function uploadFile(file, dirId){
         }
     }
 }
+
+//Здесь для удобства используем нативный fetch
+export async function downloadFile(file){
+    const response = await fetch(`http://localhost:5000/api/files/download?id=${file.id}`, {
+        headers: {Autorization: `Bearer ${localStorage.getItem('token')}`}
+    })
+    if(response.status === 200){
+        //blob - подобный физическому файлу объект
+        const blob = await response.blob()
+        //Преобразовываем бинарный вид файла в ссылку
+        const downloadUrl = window.URL.createObjectURL(blob)
+        //Создаем невидимую ссылку, и в нее помещаем данные
+        const link = document.createElement('a')
+        link.href = downloadUrl
+        link.download = file.name
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+    }
+}
