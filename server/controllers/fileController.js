@@ -65,11 +65,15 @@ class FileController{
 
             //Разделяем название по точкам, и забираем последний элемент
             const type = file.name.split('.').pop()
+            let filePath = file.name
+            if(parent){
+                filePath = parent.path + '\\' + file.name
+            }
             const dbFile = await File.create({
                 name: file.name,
                 type,
                 size: file.size,
-                path: parent?.path,
+                path: filePath,
                 // parent: parent?.id
                 userId: user.id
             })
@@ -93,6 +97,21 @@ class FileController{
             return res.status(400).json({message: "Download error"})
         } catch (e) {
             return res.status(500).json({message: "Download error"})
+        }
+    }
+
+    async deleteFile(req, res){
+        try {
+            //Получаем файл с базы данных по его id и id пользователя
+            const file = await File.findOne({where: {id: req.query.id, userId: req.user.id}})
+            if(!file){
+                return res.status(400).json({message: "File not found"})
+            }
+            fileService.deleteFile(file)
+            await file.remove()
+            res.status(200).json({message: "File was deleted"})
+        } catch (e) {
+            return res.status(500).json({message: "Delete error"})
         }
     }
 }
