@@ -9,7 +9,7 @@ const FileList = () => {
         {id: 1, name: 'first_dir', type: 'dir', size: '5gb', date: '22.12.22'},
         {id: 2, name: 'name_dir', type: 'file', size: '2gb', date: '12.12.22'},
         {id: 3, name: 'my_dir', type: 'dir', size: '10gb', date: '02.12.22'},
-    ].map(file => <File key={file.id} file={file}/>)
+    ]
 
     return(
         <div className="filelist">
@@ -18,7 +18,9 @@ const FileList = () => {
                 <div className="date">Дата</div>
                 <div className="size">Размер</div>
             </div>
-            {files}
+            {files.map(file => 
+                <File key={file.id} file={file}/>
+            )}
         </div>
     )
 }

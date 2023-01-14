@@ -5,6 +5,7 @@ import {setCurrentDir, pushToStack} from "../../../../reducers/fileReducer";
 import {deleteFile, downloadFile} from "../../../../actions/file";
 import fileLogo from "../../../../assets/file.svg";
 import dirLogo from "../../../../assets/dir.svg";
+import sizeFormat from "../../../utils/sizeFormat";
 
 const File = ({file}) => {
     const dispatch = useDispatch()
@@ -32,7 +33,7 @@ const File = ({file}) => {
             <img src={file.type === 'dir' ? dirLogo : fileLogo} alt="" className="img"/>
             <div className="name">{file.name}</div>
             <div className="date">{file.date}</div>
-            <div className="size">{file.size}</div>
+            <div className="size">{sizeFormat(file.size)}</div>
             {file.type !== 'dir' && <button onClick={(e) => downloadClickHandler(e)} className="file__btn file__download">Download</button>}
             <button onClick={(e) => deleteHandler(e)} className="file__btn file__delete">Delete</button>
         </div>

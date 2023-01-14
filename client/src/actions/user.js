@@ -38,10 +38,10 @@ export const auth = () => {
                     Autorization: `Bearer ${localStorage.getItem('token')}`
                 }
             })
-            //Сохраняем пользователя в глобальное хранилище
-            dispatch(setUser(response.data.user))
             //Сохраняем токен 
             localStorage.setItem('token', response.data.token)
+            //Сохраняем пользователя в глобальное хранилище
+            dispatch(setUser(response.data.user))
         } catch (e) {
             console.log(e);
             localStorage.removeItem('token')

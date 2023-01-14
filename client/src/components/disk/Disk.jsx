@@ -14,10 +14,11 @@ const Disk = () => {
     const dirStack = useSelector(state => state.files.dirStack)
 
     const [dragEnter, setDragEnter] = useState(false)
+    const [sort, setSort] = useState('type')
 
     useEffect(() => {
-        dispatch(getFiles(currentDir))
-    }, [currentDir])
+        dispatch(getFiles(currentDir, sort))
+    }, [currentDir, sort])
 
     const showPopupHandler = () => {
         // dispatch(createFile('dir name new'))
@@ -72,6 +73,16 @@ const Disk = () => {
                     {/* Multiple - выбор сразу нескольких файлов */}
                     <input multiple={true} onChange={(event) => fileUploadHandler(event)} type="file" id="disk_upload-input" className="disk__upload-input" />
                 </div>
+                {/* В value прокидываем значение, по которому происхлдит сортировка на сервере */}
+                <select 
+                    className="disk__select"
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value)}
+                >
+                    <option value="name">По имени</option>
+                    <option value="type">По типу</option>
+                    <option value="date">По дате</option>
+                </select>
               </div>
               <FileList/>
               <Popup/>
