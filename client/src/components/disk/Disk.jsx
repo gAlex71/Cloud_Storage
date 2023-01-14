@@ -6,6 +6,7 @@ import FileList from "./fileList/FileList";
 import Popup from "./Popup";
 import { setCurrentDir, setPopupDisplay } from "../../reducers/fileReducer";
 import { useState } from "react";
+import Uploader from "./uploader/Uploader";
 
 const Disk = () => {
     const dispatch = useDispatch()
@@ -72,8 +73,9 @@ const Disk = () => {
                     <input multiple={true} onChange={(event) => fileUploadHandler(event)} type="file" id="disk_upload-input" className="disk__upload-input" />
                 </div>
               </div>
-            <FileList/>
-            <Popup/>
+              <FileList/>
+              <Popup/>
+              <Uploader/>
             </div>
             : <div className="drop-area" onDrop={dropHandler} onDragEnter={dragEnterHandler} onDragLeave={dragLeaveHandler} onDragOver={dragEnterHandler}>
                 Перетащите файлы сюда
