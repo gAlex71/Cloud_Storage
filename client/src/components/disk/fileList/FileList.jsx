@@ -11,6 +11,14 @@ const FileList = () => {
         {id: 3, name: 'my_dir', type: 'dir', size: '10gb', date: '02.12.22'},
     ]
 
+    if(files.length === 0){
+        return(
+            <div className="loader">
+                Файлы не найдены
+            </div>
+        )
+    }
+
     return(
         <div className="filelist">
             <div className="header">

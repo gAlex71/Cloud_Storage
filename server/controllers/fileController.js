@@ -129,6 +129,18 @@ class FileController{
             return res.status(500).json({message: "Delete error"})
         }
     }
+
+    async searchFile(req, res){
+        try {
+            const searchName = req.body.search
+            let files = await File.findAll({where: {userId: req.user.id}})
+            //Если название файла включает в себя строку поиска
+            files = files.filter(file => file.name.includes(searchName))
+            return res.json(files)
+        } catch (e) {
+            return res.status(400).json({message: "Search error"})
+        }
+    }
 }
 
 module.exports = new FileController()
