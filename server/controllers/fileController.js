@@ -2,6 +2,7 @@ const fileService = require('../services/fileService')
 const path = require('path')
 const fs = require('fs')
 const {User, File} = require('../models/models')
+const { getPath } = require('../services/fileService')
 
 //Здесь мы будем работать с запросами
 class FileController{
@@ -104,7 +105,7 @@ class FileController{
             //Получаем файл с базы данных по его id и id пользователя
             const file = await File.findOne({where: {id: req.query.id, userId: req.user.id}})
             //Находим путь к этому файлу
-            const pathFile = path.join(__dirname, `\\${req.user.id}\\${file.path}\\${file.name}`)
+            const pathFile = fileService(getPath(file))
             //Если файл по данному пути существует, то отправляем его обратно на клиент
             if(fs.existsSync(pathFile)){
                 return res.download(pathFile, file.name)

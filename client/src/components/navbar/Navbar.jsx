@@ -3,8 +3,7 @@ import "./navbar.css";
 import {NavLink} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from "../../reducers/userReducer";
-import { searchFile } from "../../actions/file";
-import { getFiles } from "../../../../server/controllers/fileController";
+import { searchFile, getFiles } from "../../actions/file";
 import { showLoader } from "../../reducers/appReducer";
 
 const Navbar = () => {

@@ -16,3 +16,7 @@
     grid-column-start: 6;
     justify-self: center;
   }
+
+  .fileplate{
+    display: flex;
+  }

@@ -10,6 +10,7 @@ const FileList = () => {
         {id: 2, name: 'name_dir', type: 'file', size: '2gb', date: '12.12.22'},
         {id: 3, name: 'my_dir', type: 'dir', size: '10gb', date: '02.12.22'},
     ]
+    const setView = useSelector(state => state.files.view)
 
     if(files.length === 0){
         return(
@@ -19,18 +20,27 @@ const FileList = () => {
         )
     }
 
-    return(
-        <div className="filelist">
-            <div className="header">
-                <div className="name">Название</div>
-                <div className="date">Дата</div>
-                <div className="size">Размер</div>
+    if(setView === 'list'){
+        return(
+            <div className="filelist">
+                <div className="header">
+                    <div className="name">Название</div>
+                    <div className="date">Дата</div>
+                    <div className="size">Размер</div>
+                </div>
+                {files.map(file => 
+                    <File key={file.id} file={file}/>
+                )}
             </div>
+        )
+    }
+    if(setView === 'plate'){
+        <div className="fileplate">
             {files.map(file => 
                 <File key={file.id} file={file}/>
             )}
         </div>
-    )
+    }
 }
 
 export default FileList
